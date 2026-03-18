@@ -2,4 +2,111 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+  text-transform: capitalize;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2em;
+}
+
+aside {
+  position: absolute;
+  right: 0;
+}
+
+aside nav {
+  display: flex;
+  gap: 1em;
+  padding: 1em;
+}
+
+main {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+main hr {
+  height: 0.15em;
+  background-color: black;
+}
+
+input {
+  border: none;
+  outline: none;
+  color: black;
+}
+
+input[type="checkbox"] {
+  width: 1.25em;
+}
+
+input:disabled {
+  background-color: white;
+}
+
+article.task-card input.placeholders {
+  padding-left: 1.25em;
+}
+
+.todo-title {
+  font-size: 2.2em;
+}
+
+.task-title {
+  font-size: 1.2em;
+}
+
+.todo-title,
+.task-title {
+  font-weight: 500;
+}
+
+button{
+  padding: .3em .5em;
+}
+
+main button {
+  border: none;
+  outline: none;
+  background-color: white;
+}
+
+section.todo-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+section.todo-card section.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  padding-left: 5em;
+}
+
+article.task-card {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5em;
+  position: relative;
+}
+
+article.task-card .delete {
+  position: absolute;
+  right: 3em;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 1s;
+}
+
+article.task-card:hover .delete {
+  display: block;
+  opacity: 1;
+  transform: translateX(0px);
 }

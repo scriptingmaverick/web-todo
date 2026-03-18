@@ -5,5 +5,105 @@
     <link rel="stylesheet" href="styles/style.css" />
     <script type="module" src="scripts/script.js"></script>
   </head>
-  <body></body>
+  <body>
+    <aside>
+      <nav>
+        <p>👨‍💼<span id="user-name">john doe</span></p>
+        <button id="logout">logout</button>
+      </nav>
+    </aside>
+    <main>
+      <section class="todo-card">
+        <input
+          type="text"
+          name="todo-name"
+          placeholder="add new list"
+          class="placeholders todo-title"
+          id="todo-name"
+        />
+      </section>
+      <section class="todo-card">
+        <input
+          type="text"
+          name="todo-title"
+          class="todo-title"
+          value="Bills"
+          disabled
+        />
+        <section class="tasks-container">
+          <article class="task-card">
+            <input
+              type="text"
+              name="task-name"
+              class="placeholders task-title"
+              placeholder="add new item here"
+            />
+          </article>
+          <article class="task-card">
+            <input type="checkbox" name="status" class="status" />
+            <input
+              type="text"
+              name="task-title"
+              class="task-title"
+              value="pay phone bill"
+            />
+            <button class="delete">❌</button>
+          </article>
+          <article class="task-card">
+            <input type="checkbox" name="status" class="status" />
+            <input
+              type="text"
+              name="task-title"
+              class="task-title"
+              value="pay electricity bill"
+              disabled
+            />
+            <button class="delete" hidden>❌</button>
+          </article>
+        </section>
+      </section>
+      <hr />
+      <section class="todo-card">
+        <input
+          type="text"
+          name="todo-title"
+          class="todo-title"
+          value="Bills"
+          disabled
+        />
+        <section class="tasks-container">
+          <article class="task-card">
+            <input
+              type="text"
+              name="task-name"
+              class="placeholders task-title"
+              placeholder="add new item here"
+            />
+          </article>
+          <article class="task-card">
+            <input type="checkbox" name="status" class="status" />
+            <input
+              type="text"
+              name="task-title"
+              class="task-title"
+              value="pay phone bill"
+              disabled
+            />
+            <button class="delete">❌</button>
+          </article>
+          <article class="task-card">
+            <input type="checkbox" name="status" class="status" />
+            <input
+              type="text"
+              name="task-title"
+              class="task-title"
+              value="pay electricity bill"
+              disabled
+            />
+            <button class="delete">❌</button>
+          </article>
+        </section>
+      </section>
+    </main>
+  </body>
 </html>
