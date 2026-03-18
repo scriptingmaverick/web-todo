@@ -21,6 +21,7 @@
           class="placeholders todo-title"
           id="todo-name"
         />
+        <button class="delete">❌</button>
       </section>
       <section class="todo-card">
         <input
@@ -28,14 +29,15 @@
           name="todo-title"
           class="todo-title"
           value="Bills"
-          disabled
+          readonly
         />
+        <button class="delete">❌</button>
         <section class="tasks-container">
           <article class="task-card">
             <input
               type="text"
               name="task-name"
-              class="placeholders task-title"
+              class="task-name"
               placeholder="add new item here"
             />
           </article>
@@ -46,6 +48,7 @@
               name="task-title"
               class="task-title"
               value="pay phone bill"
+              readonly
             />
             <button class="delete">❌</button>
           </article>
@@ -56,9 +59,9 @@
               name="task-title"
               class="task-title"
               value="pay electricity bill"
-              disabled
+              readonly
             />
-            <button class="delete" hidden>❌</button>
+            <button class="delete">❌</button>
           </article>
         </section>
       </section>
@@ -69,14 +72,16 @@
           name="todo-title"
           class="todo-title"
           value="Bills"
-          disabled
+          readonly
         />
+        <button class="delete">❌</button>
+
         <section class="tasks-container">
           <article class="task-card">
             <input
               type="text"
               name="task-name"
-              class="placeholders task-title"
+              class="task-name"
               placeholder="add new item here"
             />
           </article>
@@ -87,7 +92,7 @@
               name="task-title"
               class="task-title"
               value="pay phone bill"
-              disabled
+              readonly
             />
             <button class="delete">❌</button>
           </article>
@@ -98,7 +103,7 @@
               name="task-title"
               class="task-title"
               value="pay electricity bill"
-              disabled
+              readonly
             />
             <button class="delete">❌</button>
           </article>
