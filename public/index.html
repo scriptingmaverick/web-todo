@@ -22,7 +22,6 @@
             class="placeholders todo-title"
             id="todo-name"
           />
-          <button class="delete">❌</button>
         </header>
       </section>
       <section class="todo-card">
@@ -114,6 +113,31 @@
           </article>
         </section>
       </section>
+      <template id="todo-card-template">
+        <section class="todo-card">
+          <header>
+            <input type="text" name="todo-title" class="todo-title" readonly />
+            <button class="delete">❌</button>
+          </header>
+          <section class="tasks-container">
+            <article class="task-card">
+              <input
+                type="text"
+                name="task-name"
+                class="task-name"
+                placeholder="add new task here"
+              />
+            </article>
+          </section>
+        </section>
+      </template>
+      <template id="task-card-template">
+        <article class="task-card">
+          <input type="checkbox" name="status" class="status" />
+          <input type="text" name="task-title" class="task-title" readonly />
+          <button class="delete">❌</button>
+        </article>
+      </template>
     </main>
   </body>
 </html>

@@ -71,6 +71,7 @@ input[type="checkbox"] {
   width: 1em;
   height: 1em;
   cursor: pointer;
+  padding: 1em;
 }
 
 input.status:checked + input.task-title {
@@ -112,7 +113,8 @@ article.task-card:hover {
   background: #f2f3f7;
 }
 
-article.task-card:hover .delete,section>header:hover .delete {
+article.task-card:hover .delete,
+section > header:hover .delete {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
@@ -123,6 +125,8 @@ button {
   cursor: pointer;
   background: transparent;
   font-size: 0.9em;
+  font-weight: 600;
+  transition: all 0.25s ease;
 }
 
 button:hover {
@@ -136,9 +140,10 @@ button:hover {
   transform: translateX(10px);
   pointer-events: none;
   transition: all 0.5s ease;
+  padding: 1em;
 }
 
-header{
+header {
   display: flex;
   align-items: center;
 }
@@ -148,7 +153,7 @@ input[readonly] {
   user-select: none;
 }
 
-input:not([readonly]) {
+input[type="text"]:not([readonly]) {
   cursor: text;
   user-select: text;
 }

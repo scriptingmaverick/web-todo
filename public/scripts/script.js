@@ -1,9 +1,8 @@
 const parse = (e) => {
-  const parent = e.target.parentElement;
   const child = e.target;
-  const selector = child.className || child.id;
+  const selector = child.id || child.className;
 
-  return { parent, child, selector };
+  return { child, selector };
 };
 
 const logOut = () => {
@@ -15,6 +14,11 @@ const deleteItem = (element) => {
     element.closest(".tasks-container") || element.closest("main");
   const parent = element.closest(".task-card") || element.closest(".todo-card");
 
+  if (parent.className === "todo-card") {
+    const hrElem = parent.previousElementSibling;
+    hrElem.tagName === "HR" && container.removeChild(hrElem);
+  }
+
   container.removeChild(parent);
 };
 
@@ -23,8 +27,67 @@ const changeStatus = (element) => {
   console.log("changing status", { element, container });
 };
 
-const saveEdit = (input) => () => {
-  input.setAttribute("readonly", true);
+const createTemplateCard = (
+  templateId,
+  cardTagName,
+  cardTitleClass,
+  content,
+) => {
+  const template = document.querySelector(`#${templateId}`);
+  const clone = template.content.cloneNode(true);
+
+  const card = clone.querySelector(cardTagName);
+  const input = card.querySelector(cardTitleClass);
+
+  input.value = content;
+
+  return card;
+};
+
+const createTodo = (container, content) => {
+  const card = createTemplateCard(
+    "todo-card-template",
+    "section",
+    ".todo-title",
+    content,
+  );
+
+  document.querySelectorAll(".todo-card").length > 1 &&
+    container.appendChild(document.createElement("hr"));
+  container.appendChild(card);
+};
+
+const createTask = (container, content) => {
+  const card = createTemplateCard(
+    "task-card-template",
+    "article",
+    ".task-title",
+    content,
+  );
+
+  container.appendChild(card);
+};
+
+const saveEdit = (input) => (action) => {
+  console.log("saving", action);
+  const className = input.className;
+
+  if (action === "create") {
+    const container =
+      input.closest(".tasks-container") || input.closest("main");
+    const content = input.value;
+    input.value = "";
+
+    const createCard = {
+      MAIN: createTodo,
+      SECTION: createTask,
+    };
+
+    return createCard[container.tagName](container, content);
+  }
+
+  if (className === "task-title" || className === "todo-title")
+    input.setAttribute("readonly", true);
 };
 
 const makeEditable = (input) => {
@@ -46,20 +109,24 @@ const attachListeners = () => {
       status: changeStatus,
     };
 
-    const attrbs = parse(e);
+    const { selector, child } = parse(e);
 
-    actions[attrbs.selector](attrbs.child);
+    actions[selector](child);
   });
 
   body.addEventListener("dblclick", (e) => {
-    const attrbs = parse(e);
-    makeEditable(attrbs.child);
+    const { child: input } = parse(e);
+    makeEditable(input);
   });
 
   body.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      const attrbs = parse(e);
-      console.log({ type: "Enter", ...attrbs });
+      const { child: input, selector } = parse(e);
+      if (["task-name", "todo-name"].includes(selector)) {
+        return saveEdit(input)("create");
+      }
+
+      input.blur();
     }
   });
 };
