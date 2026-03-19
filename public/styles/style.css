@@ -142,3 +142,13 @@ header{
   display: flex;
   align-items: center;
 }
+
+input[readonly] {
+  cursor: pointer;
+  user-select: none;
+}
+
+input:not([readonly]) {
+  cursor: text;
+  user-select: text;
+}

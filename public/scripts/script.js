@@ -19,7 +19,22 @@ const deleteItem = (element) => {
 };
 
 const changeStatus = (element) => {
-  console.log("changing status", { container, element });
+  const container = element.closest(".task-card");
+  console.log("changing status", { element, container });
+};
+
+const saveEdit = (input) => () => {
+  input.setAttribute("readonly", true);
+};
+
+const makeEditable = (input) => {
+  input.removeAttribute("readonly");
+  input.focus();
+
+  const len = input.value.length;
+  input.setSelectionRange(len, len);
+
+  input.addEventListener("blur", saveEdit(input), { once: true });
 };
 
 const attachListeners = () => {
@@ -34,12 +49,13 @@ const attachListeners = () => {
     const attrbs = parse(e);
 
     actions[attrbs.selector](attrbs.child);
-    console.log({ type: "clk", ...attrbs });
   });
+
   body.addEventListener("dblclick", (e) => {
     const attrbs = parse(e);
-    console.log({ type: "dbl-clk", ...attrbs });
+    makeEditable(attrbs.child);
   });
+
   body.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       const attrbs = parse(e);
