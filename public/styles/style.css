@@ -112,7 +112,7 @@ article.task-card:hover {
   background: #f2f3f7;
 }
 
-article.task-card:hover .delete,section.todo-name:hover .delete {
+article.task-card:hover .delete,section>header:hover .delete {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
@@ -135,5 +135,10 @@ button:hover {
   opacity: 0;
   transform: translateX(10px);
   pointer-events: none;
-  transition: all 0.25s ease;
+  transition: all 0.5s ease;
+}
+
+header{
+  display: flex;
+  align-items: center;
 }

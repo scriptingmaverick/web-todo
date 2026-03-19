@@ -1,4 +1,4 @@
-const refine = (e) => {
+const parse = (e) => {
   const parent = e.target.parentElement;
   const child = e.target;
   const selector = child.className || child.id;
@@ -10,11 +10,15 @@ const logOut = () => {
   console.log("logout called");
 };
 
-const deleteItem = (container, element) => {
-  console.log("deleting", { container, element, });
+const deleteItem = (element) => {
+  const container =
+    element.closest(".tasks-container") || element.closest("main");
+  const parent = element.closest(".task-card") || element.closest(".todo-card");
+
+  container.removeChild(parent);
 };
 
-const changeStatus = (container, element) => {
+const changeStatus = (element) => {
   console.log("changing status", { container, element });
 };
 
@@ -27,18 +31,18 @@ const attachListeners = () => {
       status: changeStatus,
     };
 
-    const attrbs = refine(e);
+    const attrbs = parse(e);
 
-    actions[attrbs.selector](attrbs.parent, attrbs.child);
+    actions[attrbs.selector](attrbs.child);
     console.log({ type: "clk", ...attrbs });
   });
   body.addEventListener("dblclick", (e) => {
-    const attrbs = refine(e);
+    const attrbs = parse(e);
     console.log({ type: "dbl-clk", ...attrbs });
   });
   body.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
-      const attrbs = refine(e);
+      const attrbs = parse(e);
       console.log({ type: "Enter", ...attrbs });
     }
   });
