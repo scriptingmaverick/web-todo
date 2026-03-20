@@ -32,7 +32,7 @@ describe("Tests all requests", () => {
     console.log(db.prepare("select * from todos;").all());
   });
 
-  describe("Tests with todo functionalities", () => {
+  describe("Tests todo functionalities", () => {
     describe("Tests createTodo request", () => {
       it("Tests by sending valid data", async () => {
         const data = { title: "todo-one", userId: "user-1" };
@@ -63,7 +63,7 @@ describe("Tests all requests", () => {
       });
     });
 
-    describe("Tests getTodos", () => {
+    describe("Tests getTodos of a user", () => {
       it("Tests with valid user_id", async () => {
         const userId = "user-1";
         const response = await app.request(`/todos?user-id=${userId}`, {
@@ -83,7 +83,7 @@ describe("Tests all requests", () => {
       });
     });
 
-    describe("Tests with getting data from todo", () => {
+    describe("Tests getting data from todo", () => {
       it("Testing with valid todo-id", async () => {
         const response = await app.request(`/get-todo?todo-id=${todoId}`, {
           method: "GET",
