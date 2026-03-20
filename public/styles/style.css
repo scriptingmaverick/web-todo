@@ -79,7 +79,8 @@ input.status:checked + input.task-title {
   color: #aaa;
 }
 
-.todo-title {
+.todo-title,
+#todo-name {
   font-size: 1.7em;
   font-weight: 600;
 }

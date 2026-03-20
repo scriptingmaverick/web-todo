@@ -1,0 +1,52 @@
+import { createTask, createTodo } from "./dom.js";
+import { getClosestContainer } from "./utils.js";
+
+export const logOut = () => {
+  console.log("logout called");
+};
+
+export const deleteItem = (element) => {
+  const container = getClosestContainer(element, ".tasks-container", "main");
+  const parent = getClosestContainer(element, ".task-card", ".todo-card");
+
+  if (parent.className === "todo-card") {
+    const hrElem = parent.previousElementSibling;
+    hrElem.tagName === "HR" && container.removeChild(hrElem);
+  }
+
+  container.removeChild(parent);
+};
+
+export const changeStatus = (element) => {
+  console.log('will update later')
+};
+
+
+export const saveEdit = (input) => (action) => {
+  const className = input.className;
+
+  if (action === "create") {
+    const container = getClosestContainer(input, ".tasks-container", "main");
+    const content = input.value;
+    input.value = "";
+
+    const createCard = {
+      MAIN: createTodo,
+      SECTION: createTask,
+    };
+
+    return createCard[container.tagName](container, content);
+  }
+
+  if (className.endsWith("title")) input.setAttribute("readonly", true);
+};
+
+export const makeEditable = (input) => {
+  input.removeAttribute("readonly");
+  input.focus();
+
+  const len = input.value.length;
+  input.setSelectionRange(len, len);
+
+  input.addEventListener("blur", saveEdit(input), { once: true });
+};
