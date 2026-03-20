@@ -3,10 +3,11 @@ import {
   createTaskEntry,
   createTodoEntry,
   getData,
+  getTodos,
   isNotInDB,
   removeEntry,
   updateStatus,
-  updateTitle
+  updateTitle,
 } from "./db_management.js";
 
 export const createTodo = async (c) => {
@@ -121,21 +122,14 @@ export const getTodo = async (c) => {
   }
 };
 
-export const getAllTodos = (c) => {
-  const todos = {
-    "todo-1": {
-      title: "todo-one",
-      tasks: {
-        "task-1": { title: "task-one", isDone: 0 },
-      },
-    },
-    "todo-2": {
-      title: "todo-two",
-      tasks: {
-        "task-1": { title: "task-one", isDone: 1 },
-      },
-    },
-  };
+export const getAllTodos = async (c) => {
+  const data = await c.req.query();
+  const db = c.get("db");
 
-  return c.json(todos);
+  try {
+    const todosData = getTodos(db, { userId: data["user-id"] });
+    return c.json(todosData);
+  } catch (e) {
+    return c.text(e.message);
+  }
 };

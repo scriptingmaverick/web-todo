@@ -25,6 +25,11 @@ export const updateStatus = (db, { id, todoId }) => {
   db.prepare(query).run(id, todoId);
 };
 
+export const getTodos = (db, { userId }) => {
+  const query = "SELECT * FROM todos WHERE user_id=?;";
+  return db.prepare(query).all(userId);
+};
+
 export const createId = (db, type, title) => {
   if (!title) return;
 

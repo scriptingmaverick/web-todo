@@ -30,8 +30,8 @@ export const createApp = (db) => {
   app.post("/remove-task", removeTask);
   app.post("update-task", updateTaskTitle);
 
-  app.get("/todos", getAllTodos);
   app.get("/get-todo", getTodo);
+  app.get("/todos", getAllTodos);
 
   app.get("*", serveStatic({ root: "./public" }));
   return app;

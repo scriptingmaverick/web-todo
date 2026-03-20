@@ -14,7 +14,7 @@ describe("Tests all requests", () => {
     const response = await app.request("/create-todo", {
       body: JSON.stringify({
         title: "todo-two",
-        userId: "user-2",
+        userId: "user-1",
       }),
       method: "POST",
     });
@@ -33,7 +33,7 @@ describe("Tests all requests", () => {
   });
 
   describe("Tests with todo functionalities", () => {
-    describe("Test createTodo request", () => {
+    describe("Tests createTodo request", () => {
       it("Tests by sending valid data", async () => {
         const data = { title: "todo-one", userId: "user-1" };
 
@@ -60,6 +60,26 @@ describe("Tests all requests", () => {
           await response.text(),
           "Provided value cannot be bound to SQLite parameter 3.",
         );
+      });
+    });
+
+    describe("Tests getTodos", () => {
+      it("Tests with valid user_id", async () => {
+        const userId = "user-1";
+        const response = await app.request(`/todos?user-id=${userId}`, {
+          method: "GET",
+        });
+
+        assertEquals((await response.json()).length, 2);
+      });
+
+      it("Tests with invalid user_id", async () => {
+        const userId = "user-5";
+        const response = await app.request(`/todos?user-id=${userId}`, {
+          method: "GET",
+        });
+
+        assertEquals((await response.json()).length, 0);
       });
     });
 
