@@ -11,6 +11,7 @@ import {
   toggleTaskStatus,
   updateTaskTitle,
   updateTodoTitle,
+  loginUser,
 } from "./handlers.js";
 
 export const createApp = (db) => {
@@ -20,6 +21,8 @@ export const createApp = (db) => {
     c.set("db", db);
     return next();
   });
+
+  app.post("/login", loginUser);
 
   app.post("/create-todo", createTodo);
   app.post("/remove-todo", removeTodo);

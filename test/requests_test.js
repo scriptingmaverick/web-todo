@@ -249,4 +249,35 @@ describe("Tests all requests", () => {
       });
     });
   });
+
+  describe("Tests user functionalities", () => {
+    let userId;
+    it("Tests login with new user", async () => {
+      const user_name = "new-user";
+      const response = await app.request("/login", {
+        body: JSON.stringify({ username: user_name }),
+        method: "POST",
+      });
+
+      const { id, username } = await response.json();
+
+      userId = id;
+      assertEquals(username, user_name);
+    });
+
+    it("Tests login with existing user", async () => {
+      const { username: user_name } = db
+        .prepare("select username from users where id=?")
+        .get(userId);
+
+      const response = await app.request("/login", {
+        body: JSON.stringify({ username: user_name }),
+        method: "POST",
+      });
+
+      const { username } = await response.json();
+      assertEquals(username, user_name);
+      assertEquals(db.prepare("select * from sessions;").all().length, 1);
+    });
+  });
 });

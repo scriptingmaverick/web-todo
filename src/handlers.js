@@ -5,7 +5,10 @@ import {
   getData,
   getTodos,
   isNotInDB,
+  isUserExists,
   removeEntry,
+  saveSession,
+  saveUser,
   updateStatus,
   updateTitle,
 } from "./db_management.js";
@@ -57,7 +60,7 @@ export const createTask = async (c) => {
   const db = c.get("db");
 
   try {
-    data.id = createId(db, "tasks", data?.title);
+    data.id = createId(db, "task", data?.title);
     if (!data.id) throw Error("title must not be empty.");
 
     const taskDetails = createTaskEntry(db, data);
@@ -131,5 +134,27 @@ export const getAllTodos = async (c) => {
     return c.json(todosData);
   } catch (e) {
     return c.text(e.message);
+  }
+};
+
+// User Functionalities
+
+export const loginUser = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+  try {
+    if (isUserExists(db, data)) {
+      data.sessionId = createId(db, "session", `${data?.username}-session`);
+      saveSession(db, data);
+      return c.json(data);
+    }
+
+    data.id = createId(db, "user", data?.username);
+
+    saveUser(db, data);
+
+    return c.json(data);
+  } catch (e) {
+    return c.text(e.message, 401);
   }
 };

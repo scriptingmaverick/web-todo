@@ -30,6 +30,25 @@ export const getTodos = (db, { userId }) => {
   return db.prepare(query).all(userId);
 };
 
+// User DB Management
+
+export const saveSession = (db, { sessionId }) => {
+  const query = "INSERT INTO sessions(id) VALUES(?);";
+  db.prepare(query).run(sessionId);
+};
+
+export const saveUser = (db, { id, username }) => {
+  const query = "INSERT INTO users(id, username) VALUES(?, ?);";
+  db.prepare(query).run(id, username);
+};
+
+export const isUserExists = (db, { username }) => {
+  const query = "SELECT * FROM users WHERE username=?;";
+  const data = db.prepare(query).all(username);
+
+  return data.length === 1;
+};
+
 export const createId = (db, type, title) => {
   if (!title) return;
 
@@ -40,9 +59,9 @@ export const createId = (db, type, title) => {
 
   const mergedId = `${title}-${randomId}`;
 
-  if (isNotInDB(db, mergedId, "todos")) return mergedId;
+  if (isNotInDB(db, mergedId, `${type}s`)) return mergedId;
 
-  return createId(db, "todo", title);
+  return createId(db, type, title);
 };
 
 export const getRandomId = (template = `xyxy`) =>
@@ -77,6 +96,16 @@ export const initialize = (db) => {
     todo_id text,
     title text,
     status DEFAULT 0 CHECK (status in (0,1))
+    );
+
+    CREATE TABLE IF NOT EXISTS users(
+    id text,
+    username text
+    );
+
+    CREATE TABLE IF NOT EXISTS sessions(
+    id text,
+    is_active DEFAULT 1 CHECK (is_active in (0,1))
     );
     `);
 };
