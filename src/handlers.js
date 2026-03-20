@@ -4,9 +4,9 @@ import {
   createTodoEntry,
   getData,
   isNotInDB,
-  removeTaskEntry,
-  removeTodoEntry,
+  removeEntry,
   updateStatus,
+  updateTitle
 } from "./db_management.js";
 
 export const createTodo = async (c) => {
@@ -20,6 +20,34 @@ export const createTodo = async (c) => {
     return c.json(todoDetails);
   } catch (e) {
     return c.text(e.message, 401);
+  }
+};
+
+export const removeTodo = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+
+  try {
+    if (isNotInDB(db, data.id, "todos")) throw new Error("todo not found");
+
+    removeEntry(db, data, "todos");
+    return c.text("deletion successful");
+  } catch (e) {
+    return c.text(e.message, 404);
+  }
+};
+
+export const updateTodoTitle = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+
+  try {
+    if (isNotInDB(db, data.id, "todos")) throw new Error("todo not found");
+
+    updateTitle(db, data, "todos");
+    return c.text("updated successfully");
+  } catch (e) {
+    return c.text(e.message, 404);
   }
 };
 
@@ -38,7 +66,7 @@ export const createTask = async (c) => {
   }
 };
 
-export const updateTaskStatus = async (c) => {
+export const toggleTaskStatus = async (c) => {
   const data = await c.req.json();
   const db = c.get("db");
   try {
@@ -58,22 +86,22 @@ export const removeTask = async (c) => {
   try {
     if (isNotInDB(db, data.id, "tasks")) throw new Error("task not found");
 
-    removeTaskEntry(db, data);
+    removeEntry(db, data, "tasks");
     return c.text("deletion successful");
   } catch (e) {
     return c.text(e.message, 404);
   }
 };
 
-export const removeTodo = async (c) => {
+export const updateTaskTitle = async (c) => {
   const data = await c.req.json();
   const db = c.get("db");
 
   try {
-    if (isNotInDB(db, data.id, "todos")) throw new Error("todo not found");
+    if (isNotInDB(db, data.id, "tasks")) throw new Error("task not found");
 
-    removeTodoEntry(db, data);
-    return c.text("deletion successful");
+    updateTitle(db, data, "tasks");
+    return c.text("updated successfully");
   } catch (e) {
     return c.text(e.message, 404);
   }

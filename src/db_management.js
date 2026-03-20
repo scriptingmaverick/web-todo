@@ -4,9 +4,14 @@ export const createTodoEntry = (db, data) => {
   return getData(db, "todos", data);
 };
 
-export const removeTodoEntry = (db, { id }) => {
-  const query = "DELETE FROM todos WHERE id=?;";
+export const removeEntry = (db, { id }, tableName) => {
+  const query = `DELETE FROM ${tableName} WHERE id=?;`;
   db.prepare(query).run(id);
+};
+
+export const updateTitle = (db, { id, newTitle }, tableName) => {
+  const query = `UPDATE ${tableName} SET title=? WHERE id=?;`;
+  db.prepare(query).run(newTitle, id);
 };
 
 export const createTaskEntry = (db, data) => {
@@ -17,11 +22,6 @@ export const createTaskEntry = (db, data) => {
 
 export const updateStatus = (db, { id, todoId }) => {
   const query = `UPDATE tasks SET status=NOT status WHERE id=? AND todo_id=?;`;
-  db.prepare(query).run(id, todoId);
-};
-
-export const removeTaskEntry = (db, { id, todoId }) => {
-  const query = `DELETE FROM tasks WHERE id=? AND todo_id=?;`;
   db.prepare(query).run(id, todoId);
 };
 

@@ -8,7 +8,9 @@ import {
   getAllTodos,
   getTodo,
   removeTask,
-  updateTaskStatus,
+  toggleTaskStatus,
+  updateTaskTitle,
+  updateTodoTitle,
 } from "./handlers.js";
 
 export const createApp = (db) => {
@@ -21,9 +23,12 @@ export const createApp = (db) => {
 
   app.post("/create-todo", createTodo);
   app.post("/remove-todo", removeTodo);
+  app.post("update-todo", updateTodoTitle);
+
   app.post("/create-task", createTask);
-  app.post("/toggle-task", updateTaskStatus);
+  app.post("/toggle-task", toggleTaskStatus);
   app.post("/remove-task", removeTask);
+  app.post("update-task", updateTaskTitle);
 
   app.get("/todos", getAllTodos);
   app.get("/get-todo", getTodo);
