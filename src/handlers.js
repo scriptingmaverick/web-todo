@@ -3,7 +3,9 @@ import {
   createTaskEntry,
   createTodoEntry,
   getData,
-  isInDB,
+  isNotInDB,
+  removeTaskEntry,
+  removeTodoEntry,
   updateStatus,
 } from "./db_management.js";
 
@@ -40,10 +42,38 @@ export const updateTaskStatus = async (c) => {
   const data = await c.req.json();
   const db = c.get("db");
   try {
-    if (isInDB(db, data.id, "tasks")) throw new Error("task not found");
+    if (isNotInDB(db, data.id, "tasks")) throw new Error("task not found");
 
     updateStatus(db, data);
-    return c.text("ok");
+    return c.text("toggled successfully");
+  } catch (e) {
+    return c.text(e.message, 404);
+  }
+};
+
+export const removeTask = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+
+  try {
+    if (isNotInDB(db, data.id, "tasks")) throw new Error("task not found");
+
+    removeTaskEntry(db, data);
+    return c.text("deletion successful");
+  } catch (e) {
+    return c.text(e.message, 404);
+  }
+};
+
+export const removeTodo = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+
+  try {
+    if (isNotInDB(db, data.id, "todos")) throw new Error("todo not found");
+
+    removeTodoEntry(db, data);
+    return c.text("deletion successful");
   } catch (e) {
     return c.text(e.message, 404);
   }

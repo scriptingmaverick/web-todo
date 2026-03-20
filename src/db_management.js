@@ -4,6 +4,11 @@ export const createTodoEntry = (db, data) => {
   return getData(db, "todos", data);
 };
 
+export const removeTodoEntry = (db, { id }) => {
+  const query = "DELETE FROM todos WHERE id=?;";
+  db.prepare(query).run(id);
+};
+
 export const createTaskEntry = (db, data) => {
   const query = "INSERT INTO tasks(title, id, todo_id) VALUES(?, ?, ?);";
   db.prepare(query).run(data.title, data.id, data.todoId);
@@ -11,7 +16,12 @@ export const createTaskEntry = (db, data) => {
 };
 
 export const updateStatus = (db, { id, todoId }) => {
-  const query = `UPDATE tasks SET status=NOT status WHERE id=? and todo_id=?;`;
+  const query = `UPDATE tasks SET status=NOT status WHERE id=? AND todo_id=?;`;
+  db.prepare(query).run(id, todoId);
+};
+
+export const removeTaskEntry = (db, { id, todoId }) => {
+  const query = `DELETE FROM tasks WHERE id=? AND todo_id=?;`;
   db.prepare(query).run(id, todoId);
 };
 
@@ -25,7 +35,7 @@ export const createId = (db, type, title) => {
 
   const mergedId = `${title}-${randomId}`;
 
-  if (isInDB(db, mergedId, "todos")) return mergedId;
+  if (isNotInDB(db, mergedId, "todos")) return mergedId;
 
   return createId(db, "todo", title);
 };
@@ -39,7 +49,7 @@ export const getRandomId = (template = `xyxy`) =>
 export const randomBtw = (min, max) =>
   Math.round(Math.random() * (max - min)) + min;
 
-export const isInDB = (db, id, tableName) => {
+export const isNotInDB = (db, id, tableName) => {
   const query = `SELECT * FROM ${tableName} WHERE id=?;`;
   const data = db.prepare(query).all(id);
 

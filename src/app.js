@@ -4,8 +4,10 @@ import { logger } from "hono/logger";
 import {
   createTask,
   createTodo,
+  removeTodo,
   getAllTodos,
   getTodo,
+  removeTask,
   updateTaskStatus,
 } from "./handlers.js";
 
@@ -18,8 +20,10 @@ export const createApp = (db) => {
   });
 
   app.post("/create-todo", createTodo);
+  app.post("/remove-todo", removeTodo);
   app.post("/create-task", createTask);
   app.post("/toggle-task", updateTaskStatus);
+  app.post("/remove-task", removeTask);
 
   app.get("/todos", getAllTodos);
   app.get("/get-todo", getTodo);

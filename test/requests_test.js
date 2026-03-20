@@ -104,10 +104,12 @@ describe("Tests all requests", () => {
 
   describe("Tests the toggling of a task status", () => {
     it("Tests toggling a valid task", async () => {
-      await app.request("/toggle-task", {
+      const response = await app.request("/toggle-task", {
         method: "POST",
         body: JSON.stringify({ id: taskId, todoId }),
       });
+
+      assertEquals(await response.text(), "toggled successfully");
     });
 
     it("Tests toggling an invalid task", async () => {
@@ -118,6 +120,48 @@ describe("Tests all requests", () => {
 
       assertEquals(response.status, 404);
       assertEquals(await response.text(), "task not found");
+    });
+  });
+
+  describe("Tests removal of a task", () => {
+    it("Tests removing a valid task", async () => {
+      const response = await app.request("/remove-task", {
+        method: "POST",
+        body: JSON.stringify({ id: taskId, todoId }),
+      });
+
+      assertEquals(await response.text(), "deletion successful");
+    });
+
+    it("Tests toggling an invalid task", async () => {
+      const response = await app.request("/remove-task", {
+        method: "POST",
+        body: JSON.stringify({ id: "task-one", todoId }),
+      });
+
+      assertEquals(response.status, 404);
+      assertEquals(await response.text(), "task not found");
+    });
+  });
+
+  describe("Tests removal of a todo", () => {
+    it("Tests removing a valid todo", async () => {
+      const response = await app.request("/remove-todo", {
+        method: "POST",
+        body: JSON.stringify({ id: todoId }),
+      });
+
+      assertEquals(await response.text(), "deletion successful");
+    });
+
+    it("Tests toggling an invalid todo", async () => {
+      const response = await app.request("/remove-todo", {
+        method: "POST",
+        body: JSON.stringify({ id: "task-one" }),
+      });
+
+      assertEquals(response.status, 404);
+      assertEquals(await response.text(), "todo not found");
     });
   });
 });
