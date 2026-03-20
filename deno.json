@@ -1,9 +1,11 @@
 {
   "tasks": {
-    "serve": "deno run --watch -A main.js"
+    "serve": "deno run --watch -A main.js",
+    "test": "deno test --watch -A"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
+    "@std/testing": "jsr:@std/testing@^1.0.17/bdd",
     "hono": "npm:hono@^4.12.8"
   }
 }
