@@ -14,6 +14,7 @@ import {
   updateStatus,
   updateTitle,
 } from "./db_management.js";
+import { getCookie } from "hono/cookie";
 
 export const createTodo = async (c) => {
   const data = await c.req.json();
@@ -146,9 +147,12 @@ export const loginUser = async (c) => {
   const db = c.get("db");
   try {
     if (isUserExists(db, data)) {
-      data.sessionId = createId(db, "session", `${data?.username}-session`);
-      saveSession(db, data);
+      const cookie = getCookie(c, "session_id");
+      data.sessionId = cookie
+        ? cookie
+        : createId(db, "session", `${data?.username}-session`);
 
+      saveSession(db, data);
       return c.json(data);
     }
 
