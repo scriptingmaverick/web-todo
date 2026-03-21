@@ -158,3 +158,39 @@ input[type="text"]:not([readonly]) {
   cursor: text;
   user-select: text;
 }
+
+#form-section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+form {
+  border-radius: 0.3em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  font-size: 1.2em;
+}
+
+form input {
+  border-bottom: 1px solid black;
+}
+
+form input::placeholder {
+  color: #aaa;
+}
+
+form button {
+  width: max-content;
+  padding: 0.3em 0.8em;
+  background-color: white;
+  border-radius: 0.2em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}

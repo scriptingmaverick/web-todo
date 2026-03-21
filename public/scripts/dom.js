@@ -2,28 +2,31 @@ import { saveEdit } from "./handlers.js";
 import { getTargetAtrrbs } from "./utils.js";
 
 export const createTemplateCard = (
+  container,
   templateId,
   cardTagName,
   cardTitleClass,
-  content,
+  data,
 ) => {
-  const template = document.querySelector(`#${templateId}`);
+  const template = container.querySelector(`#${templateId}`);
   const clone = template.content.cloneNode(true);
 
   const card = clone.querySelector(cardTagName);
-  const input = card.querySelector(cardTitleClass);
+  card.id = data.id;
 
-  input.value = content;
+  const input = card.querySelector(cardTitleClass);
+  input.value = data.title;
 
   return card;
 };
 
-export const createTodo = (container, content) => {
+export const createTodo = (container, todo) => {
   const card = createTemplateCard(
+    container,
     "todo-card-template",
     "section",
     ".todo-title",
-    content,
+    todo,
   );
 
   const cards = document.querySelectorAll(".todo-card");
@@ -33,13 +36,17 @@ export const createTodo = (container, content) => {
   container.appendChild(card);
 };
 
-export const createTask = (container, content) => {
+export const createTask = (container, task) => {
   const card = createTemplateCard(
+    document.querySelector("main"),
     "task-card-template",
     "article",
     ".task-title",
-    content,
+    task,
   );
+
+  const chbox = card.querySelector(".status");
+  chbox.checked = task.status;
 
   container.appendChild(card);
 };

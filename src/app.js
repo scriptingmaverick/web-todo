@@ -13,6 +13,8 @@ import {
   updateTodoTitle,
   loginUser,
   logoutUser,
+  getStartPage,
+  getAllTasks,
 } from "./handlers.js";
 
 export const createApp = (db) => {
@@ -33,10 +35,13 @@ export const createApp = (db) => {
   app.post("/create-task", createTask);
   app.post("/toggle-task", toggleTaskStatus);
   app.post("/remove-task", removeTask);
-  app.post("update-task", updateTaskTitle);
+  app.post("/update-task", updateTaskTitle);
 
   app.get("/get-todo", getTodo);
   app.get("/todos", getAllTodos);
+  app.get("/tasks", getAllTasks);
+
+  app.get("/get-start-page", getStartPage);
 
   app.get("*", serveStatic({ root: "./public" }));
   return app;

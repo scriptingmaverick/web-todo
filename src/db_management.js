@@ -1,6 +1,7 @@
 export const createTodoEntry = (db, data) => {
-  const query = `INSERT INTO todos(title, id, user_id) VALUES(?, ?, ?);`;
-  db.prepare(query).run(data.title, data.id, data.userId);
+  const query = `INSERT INTO todos(title, id, username) VALUES(?, ?, ?);`;
+
+  db.prepare(query).run(data.title, data.id, data.username);
   return getData(db, "todos", data);
 };
 
@@ -25,16 +26,21 @@ export const updateStatus = (db, { id, todoId }) => {
   db.prepare(query).run(id, todoId);
 };
 
-export const getTodos = (db, { userId }) => {
-  const query = "SELECT * FROM todos WHERE user_id=?;";
-  return db.prepare(query).all(userId);
+export const getTodos = (db, { username }) => {
+  const query = "SELECT * FROM todos WHERE username=?;";
+  return db.prepare(query).all(username);
+};
+
+export const getTasks = (db, { todoId }) => {
+  const query = "SELECT * FROM tasks WHERE todo_id=?;";
+  return db.prepare(query).all(todoId);
 };
 
 // User DB Management
 
-export const saveSession = (db, { sessionId }) => {
-  const query = "INSERT INTO sessions(id) VALUES(?);";
-  db.prepare(query).run(sessionId);
+export const saveSession = (db, { sessionId, username }) => {
+  const query = "INSERT INTO sessions(id, username) VALUES(?, ?);";
+  db.prepare(query).run(sessionId, username);
 };
 
 export const saveUser = (db, { id, username }) => {
@@ -44,9 +50,7 @@ export const saveUser = (db, { id, username }) => {
 
 export const isUserExists = (db, { username }) => {
   const query = "SELECT * FROM users WHERE username=?;";
-  const data = db.prepare(query).all(username);
-
-  return data.length === 1;
+  return db.prepare(query).get(username);
 };
 
 export const removeSession = (db, { sessionId }) => {
@@ -97,7 +101,7 @@ export const getData = (db, tableName, { id }) =>
 export const initialize = (db) => {
   db.exec(`
     CREATE TABLE IF NOT EXISTS todos(
-    user_id text,
+    username text,
     id text,
     title text
     );
@@ -116,7 +120,8 @@ export const initialize = (db) => {
 
     CREATE TABLE IF NOT EXISTS sessions(
     id text,
-    is_active INTEGER DEFAULT 1 CHECK (is_active in (0,1))
+    is_active INTEGER DEFAULT 1 CHECK (is_active in (0,1)),
+    username text
     );
     `);
 };

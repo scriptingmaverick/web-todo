@@ -6,138 +6,70 @@
     <script type="module" src="scripts/script.js"></script>
   </head>
   <body>
-    <aside>
-      <nav>
-        <p><span id="emoji">👨‍💼</span><span id="user-name">john doe</span></p>
-        <button id="logout">logout</button>
-      </nav>
-    </aside>
-    <main>
-      <section class="todo-card">
-        <header>
-          <input
-            type="text"
-            name="todo-name"
-            placeholder="add new list"
-            class="placeholders"
-            id="todo-name"
-          />
-        </header>
-      </section>
-      <section class="todo-card">
-        <header>
-          <input
-            type="text"
-            name="todo-title"
-            class="todo-title"
-            value="Bills"
-            readonly
-          />
-          <button class="delete">❌</button>
-        </header>
-        <section class="tasks-container">
-          <article class="task-card">
-            <input
-              type="text"
-              name="task-name"
-              class="task-name"
-              placeholder="add new item here"
-            />
-          </article>
-          <article class="task-card">
-            <input type="checkbox" name="status" class="status" />
-            <input
-              type="text"
-              name="task-title"
-              class="task-title"
-              value="pay phone bill"
-              readonly
-            />
-            <button class="delete">❌</button>
-          </article>
-          <article class="task-card">
-            <input type="checkbox" name="status" class="status" />
-            <input
-              type="text"
-              name="task-title"
-              class="task-title"
-              value="pay electricity bill"
-              readonly
-            />
-            <button class="delete">❌</button>
-          </article>
-        </section>
-      </section>
-      <hr />
-      <section class="todo-card">
-        <header>
-          <input
-            type="text"
-            name="todo-title"
-            class="todo-title"
-            value="Bills"
-            readonly
-          />
-          <button class="delete">❌</button>
-        </header>
-        <section class="tasks-container">
-          <article class="task-card">
-            <input
-              type="text"
-              name="task-name"
-              class="task-name"
-              placeholder="add new item here"
-            />
-          </article>
-          <article class="task-card">
-            <input type="checkbox" name="status" class="status" />
-            <input
-              type="text"
-              name="task-title"
-              class="task-title"
-              value="pay phone bill"
-              readonly
-            />
-            <button class="delete">❌</button>
-          </article>
-          <article class="task-card">
-            <input type="checkbox" name="status" class="status" />
-            <input
-              type="text"
-              name="task-title"
-              class="task-title"
-              value="pay electricity bill"
-              readonly
-            />
-            <button class="delete">❌</button>
-          </article>
-        </section>
-      </section>
-      <template id="todo-card-template">
+    <template id="home-template">
+      <aside>
+        <nav>
+          <p><span id="emoji">👨‍💼</span><span id="user-name">john doe</span></p>
+          <button id="logout">logout</button>
+        </nav>
+      </aside>
+      <main>
         <section class="todo-card">
           <header>
-            <input type="text" name="todo-title" class="todo-title" readonly />
-            <button class="delete">❌</button>
+            <input
+              type="text"
+              name="todo-name"
+              placeholder="add new list"
+              class="placeholders"
+              id="todo-name"
+            />
           </header>
-          <section class="tasks-container">
-            <article class="task-card">
+        </section>
+        <template id="todo-card-template">
+          <section class="todo-card">
+            <header>
               <input
                 type="text"
-                name="task-name"
-                class="task-name"
-                placeholder="add new task here"
+                name="todo-title"
+                class="todo-title"
+                readonly
               />
-            </article>
+              <button class="delete">❌</button>
+            </header>
+            <section class="tasks-container">
+              <article class="task-card">
+                <input
+                  type="text"
+                  name="task-name"
+                  class="task-name"
+                  placeholder="add new task here"
+                />
+              </article>
+            </section>
           </section>
-        </section>
-      </template>
-      <template id="task-card-template">
-        <article class="task-card">
-          <input type="checkbox" name="status" class="status" />
-          <input type="text" name="task-title" class="task-title" readonly />
-          <button class="delete">❌</button>
-        </article>
-      </template>
-    </main>
+        </template>
+        <template id="task-card-template">
+          <article class="task-card">
+            <input type="checkbox" name="status" class="status" />
+            <input type="text" name="task-title" class="task-title" readonly />
+            <button class="delete">❌</button>
+          </article>
+        </template>
+      </main>
+    </template>
+
+    <template id="form-template">
+      <section id="form-section">
+        <form method="post">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Enter your username"
+          />
+          <button class="login" type="submit">Login</button>
+        </form>
+      </section>
+    </template>
   </body>
 </html>

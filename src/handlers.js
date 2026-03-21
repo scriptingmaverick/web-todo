@@ -3,6 +3,7 @@ import {
   createTaskEntry,
   createTodoEntry,
   getData,
+  getTasks,
   getTodos,
   isNotInDB,
   isSessionActive,
@@ -14,7 +15,7 @@ import {
   updateStatus,
   updateTitle,
 } from "./db_management.js";
-import { getCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 
 export const createTodo = async (c) => {
   const data = await c.req.json();
@@ -114,6 +115,22 @@ export const updateTaskTitle = async (c) => {
   }
 };
 
+export const getAllTasks = async (c) => {
+  const { "todo-id": todoId } = await c.req.query();
+  const db = c.get("db");
+
+  try {
+    const data = db.prepare("SELECT * FROM todos WHERE id=?").get(todoId);
+    if (!data) throw new Error("Todo not found");
+
+    const tasksData = getTasks(db, { todoId });
+
+    return c.json(tasksData);
+  } catch (e) {
+    return c.text(e.message, 404);
+  }
+};
+
 export const getTodo = async (c) => {
   const { "todo-id": todoId } = await c.req.query();
   const db = c.get("db");
@@ -129,36 +146,51 @@ export const getTodo = async (c) => {
 };
 
 export const getAllTodos = async (c) => {
-  const data = await c.req.query();
+  const { "user-name": username } = await c.req.query();
   const db = c.get("db");
 
   try {
-    const todosData = getTodos(db, { userId: data["user-id"] });
+    const data = db
+      .prepare("SELECT * FROM users WHERE username=?")
+      .get(username);
+
+    if (!data) throw new Error("User not found");
+
+    const todosData = getTodos(db, { username });
     return c.json(todosData);
   } catch (e) {
-    return c.text(e.message);
+    return c.text(e.message, 404);
   }
 };
 
 // User Functionalities
 
+const redirectToHome = (c) => {
+  const headers = new Headers();
+  headers.append("location", "/home");
+
+  return c.response("redirect to home", {
+    headers,
+    status: 303,
+  });
+};
+
 export const loginUser = async (c) => {
   const data = await c.req.json();
   const db = c.get("db");
   try {
-    if (isUserExists(db, data)) {
-      const cookie = getCookie(c, "session_id");
-      data.sessionId = cookie
-        ? cookie
-        : createId(db, "session", `${data?.username}-session`);
+    const cookie = getCookie(c, "session_id");
+    if (cookie) return redirectToHome(c);
 
-      saveSession(db, data);
-      return c.json(data);
+    if (!isUserExists(db, data)) {
+      data.id = createId(db, "user", data?.username);
+      saveUser(db, data);
     }
 
-    data.id = createId(db, "user", data?.username);
-    saveUser(db, data);
+    data.sessionId = createId(db, "session", `${data?.username}-session`);
+    saveSession(db, data);
 
+    setCookie(c, "session_id", data.sessionId);
     return c.json(data);
   } catch (e) {
     return c.text(e.message, 401);
@@ -181,4 +213,18 @@ export const logoutUser = async (c) => {
   } catch (e) {
     return c.text(e.message, 501);
   }
+};
+
+export const getStartPage = (c) => {
+  const db = c.get("db");
+  const cookie = getCookie(c, "session_id");
+
+  if (cookie) {
+    const { username } = getData(db, "sessions", { id: cookie });
+    const todosData = getTodos(db, { username });
+
+    return c.json({ username, todosData, page: "home" });
+  }
+
+  return c.json({ page: "login" });
 };
