@@ -12,6 +12,7 @@ import {
   updateTaskTitle,
   updateTodoTitle,
   loginUser,
+  logoutUser,
 } from "./handlers.js";
 
 export const createApp = (db) => {
@@ -23,6 +24,7 @@ export const createApp = (db) => {
   });
 
   app.post("/login", loginUser);
+  app.post("/logout", logoutUser);
 
   app.post("/create-todo", createTodo);
   app.post("/remove-todo", removeTodo);

@@ -30,6 +30,8 @@ describe("Tests all requests", () => {
   afterAll(() => {
     console.log(db.prepare("select * from tasks;").all());
     console.log(db.prepare("select * from todos;").all());
+    console.log(db.prepare("select * from users;").all());
+    console.log(db.prepare("select * from sessions;").all());
   });
 
   describe("Tests todo functionalities", () => {
@@ -47,7 +49,7 @@ describe("Tests all requests", () => {
         assertEquals(response.status, 200);
       });
 
-      it("Tests by sending valid data", async () => {
+      it("Tests by sending invalid data", async () => {
         const data = { title: "todo-one" };
 
         const response = await app.request("/create-todo", {
@@ -84,7 +86,7 @@ describe("Tests all requests", () => {
     });
 
     describe("Tests getting data from todo", () => {
-      it("Testing with valid todo-id", async () => {
+      it("Testing with valid todo_id", async () => {
         const response = await app.request(`/get-todo?todo-id=${todoId}`, {
           method: "GET",
         });
@@ -96,7 +98,7 @@ describe("Tests all requests", () => {
         assertEquals(data.title, "todo-one");
       });
 
-      it("Testing with invalid todo-id", async () => {
+      it("Testing with invalid todo_id", async () => {
         const response = await app.request(`/get-todo?todo-id=nothing`, {
           method: "GET",
         });
@@ -129,7 +131,7 @@ describe("Tests all requests", () => {
       });
     });
 
-    describe("Tests updating mechanism of a todo", () => {
+    describe("Tests updating title of a todo", () => {
       it("Tests with valid todo", async () => {
         const response = await app.request("/update-todo", {
           body: JSON.stringify({ id: newTodoId, newTitle: "todo-two-updated" }),
@@ -168,7 +170,7 @@ describe("Tests all requests", () => {
         assertEquals(response.status, 200);
       });
 
-      it("Tests by sending valid data", async () => {
+      it("Tests by sending invalid data", async () => {
         const data = { title: "task-one" };
 
         const response = await app.request("/create-task", {
@@ -206,7 +208,7 @@ describe("Tests all requests", () => {
     });
 
     describe("Tests removal of a task", () => {
-      it("Tests removing a valid task", async () => {
+      it("Tests with a valid task", async () => {
         const response = await app.request("/remove-task", {
           method: "POST",
           body: JSON.stringify({ id: taskId, todoId }),
@@ -215,7 +217,7 @@ describe("Tests all requests", () => {
         assertEquals(await response.text(), "deletion successful");
       });
 
-      it("Tests toggling an invalid task", async () => {
+      it("Tests with an invalid task", async () => {
         const response = await app.request("/remove-task", {
           method: "POST",
           body: JSON.stringify({ id: "task-one", todoId }),
@@ -226,7 +228,7 @@ describe("Tests all requests", () => {
       });
     });
 
-    describe("Tests updating mechanism of a task", () => {
+    describe("Tests updating title of a task", () => {
       it("Tests with valid task", async () => {
         const response = await app.request("/update-task", {
           body: JSON.stringify({ id: newTaskId, newTitle: "task-two-updated" }),
@@ -236,7 +238,7 @@ describe("Tests all requests", () => {
         assertEquals(await response.text(), "updated successfully");
       });
 
-      it("Tests with invalid task", async () => {
+      it("Tests with an invalid task", async () => {
         const response = await app.request("/update-task", {
           body: JSON.stringify({
             id: "newTaskId",
@@ -251,33 +253,65 @@ describe("Tests all requests", () => {
   });
 
   describe("Tests user functionalities", () => {
-    let userId;
-    it("Tests login with new user", async () => {
-      const user_name = "new-user";
-      const response = await app.request("/login", {
-        body: JSON.stringify({ username: user_name }),
-        method: "POST",
+    let userId, sessionId;
+    describe("Tests Login functionality", () => {
+      it("Tests login with new user", async () => {
+        const user_name = "new-user";
+        const response = await app.request("/login", {
+          body: JSON.stringify({ username: user_name }),
+          method: "POST",
+        });
+
+        const { id, username } = await response.json();
+
+        userId = id;
+        assertEquals(username, user_name);
       });
 
-      const { id, username } = await response.json();
+      it("Tests login with existing user", async () => {
+        const { username: user_name } = db
+          .prepare("select username from users where id=?")
+          .get(userId);
 
-      userId = id;
-      assertEquals(username, user_name);
+        const response = await app.request("/login", {
+          body: JSON.stringify({ username: user_name }),
+          method: "POST",
+        });
+
+        const { username, sessionId: session_id } = await response.json();
+        sessionId = session_id;
+        assertEquals(username, user_name);
+        assertEquals(db.prepare("select * from sessions;").all().length, 1);
+      });
     });
 
-    it("Tests login with existing user", async () => {
-      const { username: user_name } = db
-        .prepare("select username from users where id=?")
-        .get(userId);
+    describe("Tests Logout functionality", () => {
+      it("Tests with valid sessionId", async () => {
+        const response = await app.request("/logout", {
+          method: "POST",
+          body: JSON.stringify({ sessionId }),
+        });
 
-      const response = await app.request("/login", {
-        body: JSON.stringify({ username: user_name }),
-        method: "POST",
+        assertEquals(await response.text(), "Logout successful");
       });
 
-      const { username } = await response.json();
-      assertEquals(username, user_name);
-      assertEquals(db.prepare("select * from sessions;").all().length, 1);
+      it("Tests with an invalid sessionId", async () => {
+        const response = await app.request("/logout", {
+          method: "POST",
+          body: JSON.stringify({ sessionId: "session-1" }),
+        });
+
+        assertEquals(await response.text(), "Session not exists");
+      });
+
+      it("Tests with already removed sessionId", async () => {
+        const response = await app.request("/logout", {
+          method: "POST",
+          body: JSON.stringify({ sessionId }),
+        });
+
+        assertEquals(await response.text(), "Session is inactive");
+      });
     });
   });
 });

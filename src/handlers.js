@@ -5,8 +5,10 @@ import {
   getData,
   getTodos,
   isNotInDB,
+  isSessionActive,
   isUserExists,
   removeEntry,
+  removeSession,
   saveSession,
   saveUser,
   updateStatus,
@@ -146,15 +148,33 @@ export const loginUser = async (c) => {
     if (isUserExists(db, data)) {
       data.sessionId = createId(db, "session", `${data?.username}-session`);
       saveSession(db, data);
+
       return c.json(data);
     }
 
     data.id = createId(db, "user", data?.username);
-
     saveUser(db, data);
 
     return c.json(data);
   } catch (e) {
     return c.text(e.message, 401);
+  }
+};
+
+export const logoutUser = async (c) => {
+  const data = await c.req.json();
+  const db = c.get("db");
+
+  try {
+    if (isNotInDB(db, data.sessionId, "sessions"))
+      throw new Error("Session not exists");
+
+    if (!isSessionActive(db, data.sessionId))
+      throw new Error("Session is inactive");
+
+    removeSession(db, data);
+    return c.text("Logout successful");
+  } catch (e) {
+    return c.text(e.message, 501);
   }
 };

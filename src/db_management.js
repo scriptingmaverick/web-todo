@@ -49,6 +49,17 @@ export const isUserExists = (db, { username }) => {
   return data.length === 1;
 };
 
+export const removeSession = (db, { sessionId }) => {
+  const query = "UPDATE sessions SET is_active=NOT is_active WHERE id=?;";
+  db.prepare(query).run(sessionId);
+};
+
+export const isSessionActive = (db, sessionId) => {
+  const query = "SELECT is_active FROM sessions WHERE id=?;";
+  const { is_active } = db.prepare(query).get(sessionId);
+  return is_active;
+};
+
 export const createId = (db, type, title) => {
   if (!title) return;
 
@@ -95,7 +106,7 @@ export const initialize = (db) => {
     id text,
     todo_id text,
     title text,
-    status DEFAULT 0 CHECK (status in (0,1))
+    status INTEGER DEFAULT 0 CHECK (status in (0,1))
     );
 
     CREATE TABLE IF NOT EXISTS users(
@@ -105,7 +116,7 @@ export const initialize = (db) => {
 
     CREATE TABLE IF NOT EXISTS sessions(
     id text,
-    is_active DEFAULT 1 CHECK (is_active in (0,1))
+    is_active INTEGER DEFAULT 1 CHECK (is_active in (0,1))
     );
     `);
 };
