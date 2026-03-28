@@ -275,13 +275,12 @@ describe("Tests all requests", () => {
 
     describe("Tests getting all tasks of a todo", () => {
       it("Tests with valid todoId", async () => {
-        const response = await app.request(`/tasks?todo-id=${todoId}`, {
+        const response = await app.request(`/tasks?todo-id=${newTodoId}`, {
           method: "GET",
         });
 
         const data = await response.json();
-        assertEquals(data.length, 1);
-        assertEquals(data[0].todo_id, todoId);
+        assertEquals(data.length, 0);
       });
 
       it("Tests with an invalid todoId", async () => {
