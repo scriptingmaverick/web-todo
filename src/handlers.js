@@ -15,7 +15,7 @@ import {
   updateStatus,
   updateTitle,
 } from "./db_management.js";
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
 export const createTodo = async (c) => {
   const data = await c.req.json();
@@ -198,7 +198,8 @@ export const loginUser = async (c) => {
 };
 
 export const logoutUser = async (c) => {
-  const data = await c.req.json();
+  const sessionId = getCookie(c, "session_id");
+  const data = sessionId ? { sessionId } : await c.req.json();
   const db = c.get("db");
 
   try {
@@ -209,6 +210,8 @@ export const logoutUser = async (c) => {
       throw new Error("Session is inactive");
 
     removeSession(db, data);
+    deleteCookie(c, "session_id");
+
     return c.text("Logout successful");
   } catch (e) {
     return c.text(e.message, 501);

@@ -1,8 +1,13 @@
 import { createTask, createTodo } from "./dom.js";
 import { getClosestContainer, post, toJSON } from "./utils.js";
 
-export const logOut = () => {
-  console.log("logout called");
+export const logOut = async () => {
+  const response = await post("/logout");
+
+  if (response.status !== 200) return alert("logout unsuccessful");
+
+  console.log("logout cancelled");
+  window.location.reload();
 };
 
 export const deleteItem = async (element) => {

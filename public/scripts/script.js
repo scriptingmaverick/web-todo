@@ -32,9 +32,10 @@ const attachListeners = () => {
     const form = e.target;
     const formData = Object.fromEntries(new FormData(form));
 
-    console.log({ formData });
-    const data = await post("/login", JSON.stringify(formData));
+    const data = await post("/login", formData);
+
     console.log({ data, res: await data.text() });
+    window.location.reload();
   });
 };
 
