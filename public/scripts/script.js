@@ -34,6 +34,8 @@ const attachListeners = () => {
 
     const data = await post("/login", formData);
 
+    if (data.status !== 200) return alert("login unsuccessful");
+
     globalThis.location.reload();
   });
 };
