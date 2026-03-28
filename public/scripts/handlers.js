@@ -57,27 +57,43 @@ export const taskCreator = async (container, title) => {
   createTask(container, await toJSON(data));
 };
 
+export const handleCreation = (input) => {
+  const container = getClosestContainer(input, ".tasks-container", "main");
+  const content = input.value;
+  input.value = "";
+
+  if (content.length === 0) return;
+
+  const createCard = {
+    MAIN: todoCreator,
+    SECTION: taskCreator,
+  };
+
+  return createCard[container.tagName](container, content);
+};
+
+export const handleUpdation = async (input) => {
+  const container = getClosestContainer(input, ".task-card", ".todo-card");
+  const req = {
+    endPoint: "/update-task",
+    data: { id: container.id, newTitle: input.value },
+  };
+
+  if (container.className === "todo-card") req.endPoint = "/update-todo";
+
+  const response = await post(req.endPoint, req.data);
+
+  if (response.status !== 200) return alert("Updating unsuccessful");
+
+  input.setAttribute("readonly", true);
+};
+
 export const saveEdit = (input) => (action) => {
   const className = input.className;
 
-  if (action === "create") {
-    const container = getClosestContainer(input, ".tasks-container", "main");
-    const content = input.value;
+  if (action === "create") return handleCreation(input);
 
-    if (content.length === 0) return;
-
-    input.value = "";
-    console.log(container, input);
-
-    const createCard = {
-      MAIN: todoCreator,
-      SECTION: taskCreator,
-    };
-
-    return createCard[container.tagName](container, content);
-  }
-
-  if (className.endsWith("title")) input.setAttribute("readonly", true);
+  if (className.endsWith("title")) return handleUpdation(input);
 };
 
 export const makeEditable = (input) => {

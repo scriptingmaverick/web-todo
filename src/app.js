@@ -30,7 +30,7 @@ export const createApp = (db) => {
 
   app.post("/create-todo", createTodo);
   app.post("/remove-todo", removeTodo);
-  app.post("update-todo", updateTodoTitle);
+  app.post("/update-todo", updateTodoTitle);
 
   app.post("/create-task", createTask);
   app.post("/toggle-task", toggleTaskStatus);
