@@ -1,5 +1,5 @@
 import { createTask, createTodo } from "./dom.js";
-import { getClosestContainer } from "./utils.js";
+import { getClosestContainer, post, toJSON } from "./utils.js";
 
 export const logOut = () => {
   console.log("logout called");
@@ -18,9 +18,30 @@ export const deleteItem = (element) => {
 };
 
 export const changeStatus = (element) => {
-  console.log('will update later')
+  console.log("will update later");
 };
 
+export const todoCreator = async (container, title) => {
+  const username = document.getElementById("user-name").textContent;
+
+  const data = await post("/create-todo", { title, username });
+
+  if (data.status !== 200) return alert("some error occurred");
+
+  createTodo(container, await toJSON(data));
+};
+
+export const taskCreator = async (container, title) => {
+  const todoContainer = container.closest(".todo-card");
+  const data = await post("/create-task", {
+    title,
+    todoId: todoContainer.id,
+  });
+
+  if (data.status !== 200) return alert("some error occurred");
+
+  createTask(container, await toJSON(data));
+};
 
 export const saveEdit = (input) => (action) => {
   const className = input.className;
@@ -28,11 +49,15 @@ export const saveEdit = (input) => (action) => {
   if (action === "create") {
     const container = getClosestContainer(input, ".tasks-container", "main");
     const content = input.value;
+
+    if (content.length === 0) return;
+
     input.value = "";
+    console.log(container, input);
 
     const createCard = {
-      MAIN: createTodo,
-      SECTION: createTask,
+      MAIN: todoCreator,
+      SECTION: taskCreator,
     };
 
     return createCard[container.tagName](container, content);

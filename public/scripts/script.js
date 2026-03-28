@@ -1,12 +1,6 @@
 import { saveChanges, createTask, createTodo } from "./dom.js";
 import { changeStatus, deleteItem, logOut, makeEditable } from "./handlers.js";
-import { getTargetAtrrbs } from "./utils.js";
-
-const post = (url, body) =>
-  fetch(url, {
-    body,
-    method: "POST",
-  });
+import { getTargetAtrrbs, post, toJSON } from "./utils.js";
 
 const attachListeners = () => {
   const body = document.querySelector("body");
@@ -80,8 +74,6 @@ const renderHomePage = (data) => {
 
   body.append(cloneContainer);
 };
-
-const toJSON = (data) => data.json();
 
 const renderPage = (data) => {
   console.log("in renderer -> ", data);

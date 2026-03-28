@@ -13,3 +13,15 @@ export const getClosestContainer = (...args) => {
     if (container) return container;
   }
 };
+
+export const get = (endPoint) => fetch(endPoint);
+
+export const toJSON = (data) => data.json();
+
+export const post = (endPoint, data) => {
+  const body = JSON.stringify(data);
+  return fetch(endPoint, {
+    method: "POST",
+    body,
+  });
+};
