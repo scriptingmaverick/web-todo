@@ -7,7 +7,7 @@ export const logOut = async () => {
   if (response.status !== 200) return alert("logout unsuccessful");
 
   console.log("logout cancelled");
-  window.location.reload();
+  globalThis.location.reload();
 };
 
 export const deleteItem = async (element) => {

@@ -35,7 +35,7 @@ const attachListeners = () => {
     const data = await post("/login", formData);
 
     console.log({ data, res: await data.text() });
-    window.location.reload();
+    globalThis.location.reload();
   });
 };
 
