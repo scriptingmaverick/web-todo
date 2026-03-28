@@ -27,8 +27,12 @@ export const deleteItem = async (element) => {
   container.removeChild(parent);
 };
 
-export const changeStatus = (element) => {
-  console.log("will update later");
+export const changeStatus = async (element) => {
+  const todoId = element.closest(".todo-card").id;
+  const id = element.closest(".task-card").id;
+  const response = await post("/toggle-task", { todoId, id });
+
+  if (response.status !== 200) return alert("changing of status unsuccessful");
 };
 
 export const todoCreator = async (container, title) => {
