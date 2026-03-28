@@ -5,14 +5,24 @@ export const logOut = () => {
   console.log("logout called");
 };
 
-export const deleteItem = (element) => {
+export const deleteItem = async (element) => {
   const container = getClosestContainer(element, ".tasks-container", "main");
   const parent = getClosestContainer(element, ".task-card", ".todo-card");
+  const req = {
+    data: { id: parent.id },
+    endPoint: "/remove-task",
+  };
 
   if (parent.className === "todo-card") {
     const hrElem = parent.previousElementSibling;
     hrElem.tagName === "HR" && container.removeChild(hrElem);
+
+    req.endPoint = "/remove-todo";
   }
+
+  const response = await post(req.endPoint, req.data);
+
+  if (response.status !== 200) return alert("deletion unsuccessful");
 
   container.removeChild(parent);
 };
@@ -26,7 +36,7 @@ export const todoCreator = async (container, title) => {
 
   const data = await post("/create-todo", { title, username });
 
-  if (data.status !== 200) return alert("some error occurred");
+  if (data.status !== 200) return alert("creation of todo unsuccessful");
 
   createTodo(container, await toJSON(data));
 };
@@ -38,7 +48,7 @@ export const taskCreator = async (container, title) => {
     todoId: todoContainer.id,
   });
 
-  if (data.status !== 200) return alert("some error occurred");
+  if (data.status !== 200) return alert("creation of task unsuccessful");
 
   createTask(container, await toJSON(data));
 };
