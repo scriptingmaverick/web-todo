@@ -6,7 +6,6 @@ export const logOut = async () => {
 
   if (response.status !== 200) return alert("logout unsuccessful");
 
-  console.log("logout cancelled");
   globalThis.location.reload();
 };
 

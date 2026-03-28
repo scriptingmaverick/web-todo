@@ -34,7 +34,6 @@ const attachListeners = () => {
 
     const data = await post("/login", formData);
 
-    console.log({ data, res: await data.text() });
     globalThis.location.reload();
   });
 };
@@ -45,14 +44,12 @@ const getCloneOf = (container, id) => {
 };
 
 const renderLoginPage = () => {
-  console.log("render login -> ");
   const body = document.querySelector("body");
   const clone = getCloneOf(body, "#form-template");
   body.append(clone);
 };
 
 const renderHomePage = (data) => {
-  console.log("in render home -> ", data);
   const body = document.querySelector("body");
   const cloneContainer = getCloneOf(body, "#home-template");
 
@@ -77,7 +74,6 @@ const renderHomePage = (data) => {
 };
 
 const renderPage = (data) => {
-  console.log("in renderer -> ", data);
   const pages = {
     login: renderLoginPage,
     home: renderHomePage,

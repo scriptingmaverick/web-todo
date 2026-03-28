@@ -165,22 +165,10 @@ export const getAllTodos = async (c) => {
 
 // User Functionalities
 
-const redirectToHome = (c) => {
-  const headers = new Headers();
-  headers.append("location", "/home");
-
-  return c.response("redirect to home", {
-    headers,
-    status: 303,
-  });
-};
-
 export const loginUser = async (c) => {
   const data = await c.req.json();
   const db = c.get("db");
   try {
-    const cookie = getCookie(c, "session_id");
-    if (cookie) return redirectToHome(c);
 
     if (!isUserExists(db, data)) {
       data.id = createId(db, "user", data?.username);
