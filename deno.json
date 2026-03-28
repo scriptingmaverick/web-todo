@@ -1,7 +1,9 @@
 {
   "tasks": {
     "serve": "deno run --watch -A main.js",
-    "test": "deno test --watch -A"
+    "test": "deno test --watch -A",
+    "coverage": "deno test -A --coverage",
+    "dc": "deno coverage --detailed"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
